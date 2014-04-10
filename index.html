@@ -1,237 +1,82 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>
-            Test your server for Heartbleed (CVE-2014-0160)
-        </title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"><!-- Loading Bootstrap -->
-        <link href="bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css"><!-- Loading Flat UI -->
-        <link href="css/flat-ui.css" rel="stylesheet" type="text/css">
-        <link href="css/nprogress.css" rel="stylesheet" type="text/css">
-        <link rel="shortcut icon" href="favicon.png"><!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
-        <!--[if lt IE 9]>
-      <script src="js/html5shiv.js"></script>
-      <script src="js/respond.min.js"></script>
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Heartbleed by pachecohn</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-<style>
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  position: relative;
-  min-height: 100%;
-}
-body {
-  /* Margin bottom by footer height */
-  margin-bottom: 80px;
-}
-#footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  /* Set the fixed height of the footer here */
-  height: 70px;
-  background-color: #f5f5f5;
-}
+  </head>
+  <body>
 
+      <header>
+        <h1>Heartbleed</h1>
+        <p>A checker (site and tool) for CVE-2014-0160</p>
+      </header>
 
-/* Custom page CSS
--------------------------------------------------- */
-/* Not required for template or sticky footer method. */
+      <div id="banner">
+        <span id="logo"></span>
 
-.container {
-  width: auto;
-  max-width: 900px;
-  padding: 0 15px;
-}
-.container .text-muted {
-  margin: 20px 0;
-}
-
-.heart {
-    float: right;
-    width: 200px;
-    margin-right: -200px;
-}
-
-#hostname {
-    width: 500px;
-    height: 80px;
-    font-size: 35px;
-}
-#go {
-    font-size: 35px;
-    height: 80px;
-}
-
-#data {
-    color: #DA0A0A;
-    background-color: #34496E;
-    padding-left: 20px;
-}
-
-h3 {
-    padding: 10px;
-    text-align: center;
-}
-
-.bleed {
-    display: none;
-}
-
-.banner {
-    font-size:25px;
-    line-height: 40px;
-}
-
-.faq {
-    right: 20px;
-    font-size: 40px;
-    position: absolute;
-    bottom: 5px;
-    display: block;
-}
-h1 {
-    position: relative;
-}
-
-#error {
-    color: #34495E;
-    font-size: 20px;
-}
-
-.donate {
-    font-size: 14px;
-}
-
-.lookfaq {
-    font-size: 20px;
-}
-
-</style>
-    </head>
-    <body>
-
-        <a href="https://github.com/FiloSottile/Heartbleed"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
-
-        <div class="container">
-            <div class="page-header">
-                <img class="heart" src="images/heartbleed.png">
-                <h1>
-                    <div class="faq"><a href="faq.html">FAQ/status</a></div>
-                    Heartbleed test
-                </h1>
-            </div>
-            <h3 class="bg-info banner">
-                If there are problems, head to the <a href="faq.html">FAQ</a>
-            </h3>
-            <!--
-            <h3 class="bg-primary banner">
-                If you want to check a popular site, it might be <a href="alexa.html">here</a>
-            </h3>
-            -->
-            <p class="lead">
-                Enter a URL or a hostname to test the server for CVE-2014-0160.
-            </p>
-            <p>
-            <form class="form-inline" role="form">
-              <div class="form-group">
-                <input type="text" class="form-control" id="hostname" placeholder="example.com" autocapitalize="off" autocorrect="off">
-              </div>
-              <button type="submit" class="btn btn-primary btn-lg" id="go">Go!</button>
-            </form>
-        </p>
-        <h3 class="bg-success bleed bleed-safe">
-            All good, <span class="hostname"></span> seems fixed or unaffected!
-        </h3>
-        <h3 class="bg-warning bleed bleed-error">
-            Uh-oh, something went wrong:
-            <code id="error"></code>
-            <br>
-            <span class="lookfaq">Check what it means at the <a href="faq.html#wentwrong">FAQ</a>.<br>
-                It might mean that the server is safe, we just can't be 100% sure!</span>
-        </h3>
-        <h3 class="bg-danger bleed bleed-vuln">
-            <span class="hostname"></span> IS VULNERABLE.
-        </h3>
-        <p class="bleed bleed-vuln">
-            Here is some data we pulled from the server memory:</br>
-            (we put <code>YELLOW SUBMARINE</code> there, and it should not have come back)
-        </p>
-        <pre id="data" class="bleed bleed-vuln"></pre>
-        <p class="bleed bleed-vuln">
-            Please <strong><a href="http://heartbleed.com/">take immediate action</a></strong>!
-        </p>
-            <p>
-                You can specify a port like this <code>example.com:4433</code>. 443 by default.
-            </p>
-            <p>
-                Go <a href="http://heartbleed.com/">here</a> for all your Heartbleed information needs.
-            </p>
-            <p>
-                If you want me to fix Heartbleed for you, write you some Go or design some crypto, I'm a freelancer (for now?), so get in contact: <span style="cursor: pointer" onclick="this.textContent = ('hi' + '@filippo' + String.fromCharCode(46) + 'io '); this.onclick = null; this.style.cursor='default'">click here</span>!
-            <span class="donate">
-                And if you want to <strong>donate</strong> something, I've put a couple of buttons <a href="faq.html#donate">here</a>.
-            </span>
-            </p>
+        <a href="https://github.com/pachecohn/Heartbleed" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/pachecohn/Heartbleed/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/pachecohn/Heartbleed/tarball/master" class="button">TAR</a></li>
+          </ul>
         </div>
-        <div id="footer">
-            <div class="container">
-                <p class="text-muted">
-                    Built in a frenzy by <a href="http://filippo.io">Filippo Valsorda</a>.
-                    <a href="https://twitter.com/FiloSottile">Twitter</a>,
-                    <a href="https://github.com/FiloSottile">Github</a>.
-                    <3
-                </p>
-            </div>
-        </div><!-- /.container -->
-        <!-- Load JS here for greater good =============================-->
-        <script src="js/jquery-1.8.3.min.js" type="text/javascript">
-</script><script src="js/jquery-ui-1.10.3.custom.min.js" type="text/javascript">
-</script><script src="js/jquery.ui.touch-punch.min.js" type="text/javascript">
-</script><script src="js/bootstrap.min.js" type="text/javascript">
-</script><script src="js/bootstrap-select.js" type="text/javascript">
-</script><script src="js/bootstrap-switch.js" type="text/javascript">
-</script><script src="js/flatui-checkbox.js" type="text/javascript">
-</script><script src="js/flatui-radio.js" type="text/javascript">
-</script><script src="js/jquery.tagsinput.js" type="text/javascript">
-</script><script src="js/jquery.placeholder.js" type="text/javascript">
-</script><script src="js/nprogress.js" type="text/javascript">
-</script>
-<script type="text/javascript">
-$( "form" ).submit(function( event ) {
-    $('button').attr('disabled', 'disabled');
-  var host = $( "input:first" ).val();
-    $(".bleed").hide()
-    NProgress.start();
-    $.getJSON( "http://bleed-1161785939.us-east-1.elb.amazonaws.com/bleed/query", {
-        u: host
-    }, function( data ) {
-        $('button').removeAttr('disabled')
-        NProgress.done();
-        // console.log(data);
-        $('.hostname').text(data.host);
-        window.location.hash = data.host;
-        if (data.code == 0){
-            $('#data').text(data.data);
-            $(".bleed-vuln").show()
-        } else if (data.code == 1) {
-            $(".bleed-safe").show()
-        } else {
-            $('#error').text(data.error);
-            $(".bleed-error").show()
-        }
-  });
-  event.preventDefault();
-});
+      </div><!-- end banner -->
 
-if (window.location.hash != "#" && window.location.hash != "") {
-    $( "input:first" ).val(window.location.hash.substr(1));
-    $( "form" ).submit();
-}
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <h3>
+<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
 
-if (document.referrer) $.post("http://ec2-54-224-217-241.compute-1.amazonaws.com", document.referrer);
-</script>
-    </body>
+<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+
+<pre><code>$ cd your_repo_root/repo_name
+$ git fetch origin
+$ git checkout gh-pages
+</code></pre>
+
+<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+
+<h3>
+<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+
+<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+
+<h3>
+<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+
+<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+
+<h3>
+<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+
+<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+
+<h3>
+<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+
+<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/pachecohn">pachecohn</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
 </html>
